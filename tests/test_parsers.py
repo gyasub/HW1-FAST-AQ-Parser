@@ -1,11 +1,11 @@
 # write tests for parsers
 
+
 from seqparser import (
         FastaParser,
         FastqParser)
 
 import pytest
-
 
 def test_freebie_parser_1():
     """
@@ -33,15 +33,30 @@ def test_FastaParser():
     files that are blank or corrupted in some way. Two example Fasta files are
     provided in /tests/bad.fa and /tests/empty.fa
     """
-    pass
+    
 
+    fasta_parser = FastaParser("data/test.fa")
+    records = list(fasta_parser)
+
+    assert len(records) != 0 #checking that the file is not empty
+
+    assert all(len(record) == 2 for record in records) #checking if every tuple has length 2
+
+    for header, seq in records:     #check for header and seq combo
+        assert header.startswith('>')
+        assert not seq.startswith('>')
+
+    
 
 def test_FastaFormat():
     """
     Test to make sure that a fasta file is being read in if a fastq file is
     read, the first item is None
     """
-    pass
+    fasta_parser = FastaParser("data/test.fa")
+    records = list(fasta_parser)
+
+    assert records[0] is not None #checking if first line is not none 
 
 
 def test_FastqParser():
@@ -50,11 +65,24 @@ def test_FastqParser():
     an instance of your FastqParser class and assert that it properly reads 
     in the example Fastq File.
     """
-    pass
+    fastq_parser = FastqParser("data/test.fq")
+    records = list(fastq_parser)
+
+    assert len(records) != 0 
+
+    assert all(len(record) == 3 for record in records)
+
+    for header, seq, qual in records:
+        assert header.startswith('@')
+        assert not seq.startswith('@')
+        assert not qual.startswith('@')
 
 def test_FastqFormat():
     """
     Test to make sure fastq file is being read in. If this is a fasta file, the
     first line is None
     """
-    pass
+    fastq_parser = FastqParser("data/test.fq")
+    records = list(fastq_parser)
+
+    assert records[0] is not None
