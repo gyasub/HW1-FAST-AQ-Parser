@@ -43,8 +43,8 @@ def test_FastaParser():
     assert all(len(record) == 2 for record in records) #checking if every tuple has length 2
 
     for header, seq in records:     #check for header and seq combo
-        assert header.startswith('>')
-        assert not seq.startswith('>')
+        assert header.startswith("seq")
+        assert not seq.startswith("seq")
 
     
 
@@ -53,10 +53,12 @@ def test_FastaFormat():
     Test to make sure that a fasta file is being read in if a fastq file is
     read, the first item is None
     """
-    fasta_parser = FastaParser("data/test.fa")
+    fasta_parser = FastaParser("data/test.fq")
+
     records = list(fasta_parser)
 
-    assert records[0] is not None #checking if first line is not none 
+    assert records[0][0] is None #checking if first line is not none
+    
 
 
 def test_FastqParser():
@@ -73,16 +75,16 @@ def test_FastqParser():
     assert all(len(record) == 3 for record in records)
 
     for header, seq, qual in records:
-        assert header.startswith('@')
-        assert not seq.startswith('@')
-        assert not qual.startswith('@')
+        assert header.startswith('seq')
+        assert not seq.startswith('seq')
+        assert not qual.startswith('seq')
 
 def test_FastqFormat():
     """
     Test to make sure fastq file is being read in. If this is a fasta file, the
     first line is None
     """
-    fastq_parser = FastqParser("data/test.fq")
+    fastq_parser = FastqParser("data/test.fa")
     records = list(fastq_parser)
 
-    assert records[0] is not None
+    assert records[0][0] is  None
